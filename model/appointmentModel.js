@@ -1,17 +1,29 @@
+// models/appointmentModel.js
 const db = require("../config/db");
 
-const Appointment = {
-	getAll: (callback) => {
-		db.query("SELECT * FROM appointments", callback);
-	},
-
-	create: (data, callback) => {
-		db.query("INSERT INTO appointments SET ?", data, callback);
-	},
-
-	delete: (id, callback) => {
-		db.query("DELETE FROM appointments WHERE id = ?", [id], callback);
-	},
+const createAppointment = (nom, email, typeSoin, dateRdv, callback) => {
+	db.query(
+		"INSERT INTO appointments (nom, email, typeSoin, dateRdv) VALUES (?, ?, ?, ?)",
+		[nom, email, typeSoin, dateRdv],
+		(err, results) => {
+			if (err) {
+				return callback(err, null);
+			}
+			callback(null, results);
+		},
+	);
 };
 
-module.exports = Appointment;
+const getAllAppointments = (callback) => {
+	db.query("SELECT * FROM appointments", (err, results) => {
+		if (err) {
+			return callback(err, null);
+		}
+		callback(null, results);
+	});
+};
+
+module.exports = {
+	createAppointment,
+	getAllAppointments,
+};

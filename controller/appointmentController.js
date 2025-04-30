@@ -1,24 +1,34 @@
-const Appointment = require('../models/appointmentModel');
+// appointmentController.js
+const mysql = require("mysql2");
+require("dotenv").config();
 
-exports.getAllAppointments = (req, res) => {
-  Appointment.getAll((err, results) => {
-    if (err) return res.status(500).send(err);
-    res.json(results);
-  });
+// Connexion à la base de données
+const connection = mysql.createConnection({
+	host: "localhost",
+	user: process.env.DB_USER,
+	password: process.env.DB_PASSWORD,
+	database: process.env.DB_NAME,
+});
+
+connection.connect((err) => {
+	if (err) {
+		console.error("Erreur de connexion à la base de données:", err.stack);
+		return;
+	}
+	console.log("Connexion à la base de données réussie");
+});
+
+// Fonction pour récupérer les rendez-vous
+const getAppointments = (req, res) => {
+	const query = "SELECT * FROM appointments";
+	connection.query(query, (err, results) => {
+		if (err) {
+			console.error("Erreur de récupération des rendez-vous :", err);
+			return res.status(500).send("Erreur de récupération des rendez-vous.");
+		}
+		res.json(results);
+	});
 };
 
-exports.createAppointment = (req, res) => {
-  const data = req.body;
-  Appointment.create(data, (err, result) => {
-    if (err) return res.status(500).send(err);
-    res.status(201).json({ message: 'Rendez-vous créé', id: result.insertId });
-  });
-};
-
-exports.deleteAppointment = (req, res) => {
-  const { id } = req.params;
-  Appointment.delete(id, (err) => {
-    if (err) return res.status(500).send(err);
-    res.json({ message: 'Rendez-vous supprimé' });
-  });
-};
+// Exporter les fonctions
+module.exports = { getAppointments };

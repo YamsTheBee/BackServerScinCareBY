@@ -1,4 +1,4 @@
-// appointmentController.js
+// /controllers/adminAppointmentController.js
 const mysql = require("mysql2");
 require("dotenv").config();
 
@@ -18,8 +18,8 @@ connection.connect((err) => {
 	console.log("Connexion à la base de données réussie");
 });
 
-// Fonction pour récupérer les rendez-vous
-const getAppointments = (req, res) => {
+// Récupérer tous les rendez-vous
+const getAllAppointments = (req, res) => {
 	const query = "SELECT * FROM appointments";
 	connection.query(query, (err, results) => {
 		if (err) {
@@ -30,5 +30,19 @@ const getAppointments = (req, res) => {
 	});
 };
 
-// Exporter les fonctions
-module.exports = { getAppointments };
+// Mettre à jour le statut d'un rendez-vous
+const updateAppointmentStatus = (req, res) => {
+	const { id } = req.params;
+	const { status } = req.body; // statut peut être 'confirmé', 'annulé', etc.
+
+	const query = "UPDATE appointments SET status = ? WHERE id = ?";
+	connection.query(query, [status, id], (err) => {
+		if (err) {
+			console.error("Erreur de mise à jour du statut :", err);
+			return res.status(500).send("Erreur de mise à jour du statut.");
+		}
+		res.send("Statut du rendez-vous mis à jour !");
+	});
+};
+
+module.exports = { getAllAppointments, updateAppointmentStatus };

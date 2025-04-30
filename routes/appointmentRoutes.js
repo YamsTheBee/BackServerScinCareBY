@@ -4,11 +4,11 @@ const router = express.Router();
 // Route POST pour ajouter un RDV
 const createAppointment = (db) => {
 	return (req, res) => {
-		const { nom, email, typeSoin, dateRdv } = req.body;
+		const { user_id, date, reason, status } = req.body;
 
 		db.query(
-			"INSERT INTO appointments (nom, email, typeSoin, dateRdv) VALUES (?, ?, ?, ?)",
-			[nom, email, typeSoin, dateRdv],
+			"INSERT INTO appointments (user_id, date, reason, status) VALUES (?, ?, ?, ?)",
+			[user_id, date, reason, status || "pending"],
 			(err) => {
 				if (err) return res.status(500).send(err);
 				res.status(201).send("Rendez-vous créé !");
@@ -31,11 +31,11 @@ const getAppointments = (db) => {
 const updateAppointment = (db) => {
 	return (req, res) => {
 		const { id } = req.params;
-		const { nom, email, typeSoin, dateRdv, status } = req.body;
+		const { date, reason, status } = req.body;
 
 		db.query(
-			"UPDATE appointments SET nom = ?, email = ?, typeSoin = ?, dateRdv = ?, status = ? WHERE id = ?",
-			[nom, email, typeSoin, dateRdv, status, id],
+			"UPDATE appointments SET date = ?, reason = ?, status = ? WHERE id = ?",
+			[date, reason, status, id],
 			(err) => {
 				if (err) return res.status(500).send(err);
 				res.send("Rendez-vous mis à jour !");

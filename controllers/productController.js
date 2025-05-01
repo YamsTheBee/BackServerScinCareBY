@@ -56,3 +56,4 @@ module.exports = {
 	updateProduct,
 	deleteProduct,
 };
+// test CRUD (5/5)

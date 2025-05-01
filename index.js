@@ -2,7 +2,7 @@ const express = require("express");
 const mysql = require("mysql2");
 require("dotenv").config(); // Charger les variables d'environnement
 const helmet = require("helmet");
-const cors = require("cors"); // Importation de CORS
+const cors = require("cors"); 
 const app = express();
 const port = 5000;
 const bodyParser = require("body-parser");
@@ -17,9 +17,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Connexion à la base de données
 const db = mysql.createConnection({
 	host: "localhost",
-	user: process.env.DB_USER, // Nom d'utilisateur
-	password: process.env.DB_PASSWORD, // Mot de passe
-	database: process.env.DB_NAME, // Nom de la base de données
+	user: process.env.DB_USER, 
+	password: process.env.DB_PASSWORD, 
+	database: process.env.DB_NAME, 
 });
 
 db.connect((err) => {
@@ -42,7 +42,7 @@ app.use("/admin/appointments", adminAppointmentsRouter);
 
 // Importation du routeur pour les rendez-vous
 const appointmentsRouter = require("./routes/appointmentRoutes")(db);
-app.use("/appointments", appointmentsRouter); // Lier le router avec Express
+app.use("/appointments", appointmentsRouter); 
 
 // Route par défaut
 app.get("/", (req, res) => {

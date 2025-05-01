@@ -1,92 +1,74 @@
-const mysql = require("mysql2");
-require("dotenv").config();
+const appointmentService = require("../services/appointment.service");
 
-// Connexion à la base de données
-const connection = mysql.createConnection({
-	host: "localhost",
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	database: process.env.DB_NAME,
-});
-
-connection.connect((err) => {
-	if (err) {
-		console.error("Erreur de connexion à la base de données:", err.stack);
-		return;
+// CREATE
+const createAppointment = async (req, res) => {
+	try {
+		const { user_id, name, email, date, reason, status } = req.body;
+		const appointmentId = await appointmentService.createAppointment({
+			user_id,
+			name,
+			email,
+			date,
+			reason,
+			status,
+		});
+		res.status(201).json({
+			message: "Rendez-vous créé avec succès",
+			id: appointmentId,
+		});
+	} catch (err) {
+		console.error("Erreur lors de l'ajout du rendez-vous :", err);
+		res.status(500).send("Erreur d'enregistrement du rendez-vous.");
 	}
-	console.log("Connexion à la base de données réussie");
-});
-
-// CREATE – Ajouter un rendez-vous
-const createAppointment = (req, res) => {
-	const { user_id, date, reason, status } = req.body;
-	const query =
-		"INSERT INTO appointments (user_id, date, reason, status) VALUES (?, ?, ?, ?)";
-
-	connection.query(
-		query,
-		[user_id, date, reason, status || "pending"],
-		(err, results) => {
-			if (err) {
-				console.error("Erreur lors de l'ajout du rendez-vous :", err);
-				return res.status(500).send("Erreur d'enregistrement du rendez-vous.");
-			}
-			res
-				.status(201)
-				.json({
-					message: "Rendez-vous créé avec succès",
-					id: results.insertId,
-				});
-		},
-	);
 };
 
-// READ – Récupérer tous les rendez-vous
-const getAppointments = (req, res) => {
-	const query = "SELECT * FROM appointments";
-	connection.query(query, (err, results) => {
-		if (err) {
-			console.error("Erreur de récupération des rendez-vous :", err);
-			return res.status(500).send("Erreur de récupération des rendez-vous.");
-		}
+// READ
+const getAppointments = async (req, res) => {
+	try {
+		const results = await appointmentService.getAllAppointments();
 		res.json(results);
-	});
+	} catch (err) {
+		console.error("Erreur de récupération des rendez-vous :", err);
+		res.status(500).send("Erreur de récupération des rendez-vous.");
+	}
 };
 
-// UPDATE – Modifier un rendez-vous
-const updateAppointment = (req, res) => {
-	const { id } = req.params;
-	const { date, reason, status } = req.body;
-	const query =
-		"UPDATE appointments SET date = ?, reason = ?, status = ? WHERE id = ?";
-
-	connection.query(query, [date, reason, status, id], (err) => {
-		if (err) {
-			console.error("Erreur lors de la mise à jour du rendez-vous :", err);
-			return res.status(500).send("Erreur de mise à jour.");
-		}
+// UPDATE
+const updateAppointment = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { name, email, date, reason, status } = req.body;
+		await appointmentService.updateAppointment(id, {
+			name,
+			email,
+			date,
+			reason,
+			status,
+		});
 		res.send("Rendez-vous mis à jour avec succès.");
-	});
+	} catch (err) {
+		console.error("Erreur lors de la mise à jour du rendez-vous :", err);
+		res.status(500).send("Erreur de mise à jour.");
+	}
 };
 
-// DELETE – Supprimer un rendez-vous
-const deleteAppointment = (req, res) => {
-	const { id } = req.params;
-	const query = "DELETE FROM appointments WHERE id = ?";
-
-	connection.query(query, [id], (err) => {
-		if (err) {
-			console.error("Erreur lors de la suppression du rendez-vous :", err);
-			return res.status(500).send("Erreur de suppression.");
-		}
+// DELETE
+const deleteAppointment = async (req, res) => {
+	try {
+		const { id } = req.params;
+		await appointmentService.deleteAppointment(id);
 		res.send("Rendez-vous supprimé avec succès.");
-	});
+	} catch (err) {
+		console.error("Erreur lors de la suppression du rendez-vous :", err);
+		res.status(500).send("Erreur de suppression.");
+	}
 };
 
-// Exporter toutes les fonctions
 module.exports = {
 	createAppointment,
 	getAppointments,
 	updateAppointment,
 	deleteAppointment,
 };
+
+// test CRUD (5/5)

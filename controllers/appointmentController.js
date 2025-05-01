@@ -1,4 +1,4 @@
-const appointmentService = require("../services/appointment.service");
+const appointmentService = require("../services/appointmentService");
 
 // CREATE
 const createAppointment = async (req, res) => {
@@ -70,5 +70,3 @@ module.exports = {
 	updateAppointment,
 	deleteAppointment,
 };
-
-// test CRUD (5/5)

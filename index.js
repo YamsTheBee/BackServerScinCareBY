@@ -36,9 +36,9 @@ app.use(helmet());
 const produitsRouter = require("./routes/ProduitsRoutes");
 app.use("/api", produitsRouter);
 
-// Importer les routes
-const adminAppointmentsRouter = require("./routes/adminAppointmentRoutes");
-app.use("/admin/appointments", adminAppointmentsRouter);
+// Importer les routes Admin
+const adminAppointmentRoutes = require("./routes/adminAppointmentRoutes");
+app.use("/admin", adminAppointmentRoutes); // Utilise les routes admin
 
 // Importation du routeur pour les rendez-vous
 const appointmentsRouter = require("./routes/appointmentRoutes");

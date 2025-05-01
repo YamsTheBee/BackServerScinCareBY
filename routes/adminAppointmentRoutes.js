@@ -1,15 +1,15 @@
-// /routes/adminAppointmentRoutes.js
+// adminAppointmentRoutes.js
 const express = require("express");
 const router = express.Router();
-const {
-	getAllAppointments,
-	updateAppointmentStatus,
-} = require("../controllers/adminAppointmentController");
+const adminAppointmentController = require("../controllers/adminAppointmentController");
 
 // Route pour récupérer tous les rendez-vous
-router.get("/", getAllAppointments);
+router.get("/appointments", adminAppointmentController.getAppointments);
 
-// Route pour mettre à jour le statut d'un rendez-vous
-router.put("/:id/status", updateAppointmentStatus);
+// Route pour supprimer un rendez-vous
+router.delete(
+	"/appointments/:id",
+	adminAppointmentController.deleteAppointment,
+);
 
 module.exports = router;

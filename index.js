@@ -1,6 +1,6 @@
 const express = require("express");
 const mysql = require("mysql2");
-require("dotenv").config(); // Charger les variables d'environnement
+require("dotenv").config();
 const helmet = require("helmet");
 const cors = require("cors");
 const app = express();
@@ -8,7 +8,7 @@ const port = 5000;
 const bodyParser = require("body-parser");
 
 // Utilisation du middleware CORS
-app.use(cors()); // Permettre les requêtes depuis d'autres origines
+app.use(cors());
 
 // Middleware pour parser les requêtes JSON
 app.use(express.json());

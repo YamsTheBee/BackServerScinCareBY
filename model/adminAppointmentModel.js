@@ -1,5 +1,5 @@
 // adminAppointmentModel.js
-const db = require("../config/db"); // Assurez-vous d'importer votre connexion DB
+const db = require("../config/db"); 
 
 // Récupérer tous les rendez-vous
 const getAllAppointments = () => {
